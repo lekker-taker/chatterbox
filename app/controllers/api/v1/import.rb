@@ -6,8 +6,8 @@ module API
 
       params { requires :reviews, type: File }
 
-      post 'upload' do
-        ImportService.call(params[:reviews])
+      post "reviews" do
+        ImportService.call(params.dig("reviews", "tempfile"))
       end
     end
   end

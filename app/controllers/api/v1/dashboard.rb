@@ -5,7 +5,7 @@ module API
       params do
         optional :theme, allow_blank: false, values: -> { Theme.theme_names }
         optional :category, allow_blank: false, values: -> { Theme.category_names }
-        optional :phrase, allow_blank: false, type: String, desc: 'Filter by phrase in a product review'
+        optional :phrase, allow_blank: false, type: String, desc: "Filter by phrase in a product review"
         mutually_exclusive :theme, :category
       end
 

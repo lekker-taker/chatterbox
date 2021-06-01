@@ -1,5 +1,8 @@
+#
+#  Parent class for all services
+#
 class ApplicationService
-  def self.call(*args, **kargs, &block)
-    new(*args, **kargs, &block).call
+  def self.call(...)
+    new(...).call
   end
 end

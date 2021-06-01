@@ -21,6 +21,8 @@ require "action_controller/railtie"
 Bundler.require(*Rails.groups)
 
 module Chatterbox
+  #
+  #  My app
   class Application < Rails::Application
     config.load_defaults 6.1
     config.api_only = true

@@ -20,10 +20,10 @@ gem "grape-entity"
 gem "grape-swagger"
 
 group :development, :test do
+  gem "dotenv-rails", require: "dotenv/rails-now"
   gem "pry-byebug"
   gem "rspec-rails"
   gem "standard"
-  gem "dotenv-rails", require: 'dotenv/rails-now'
 end
 
 group :development do
