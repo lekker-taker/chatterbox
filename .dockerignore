@@ -1,0 +1,29 @@
+.gitignore
+README.md
+
+#
+# OS X
+#
+.DS_Store
+.AppleDouble
+.LSOverride
+
+#
+# Rails
+#
+.env
+.env.sample
+log
+tmp/cache
+coverage/
+spec/
+**.orig
+
+Dockerfile
+helm
+.bundle
+
+.ruby-version
+.ruby-gemset
+
+.rvmrc

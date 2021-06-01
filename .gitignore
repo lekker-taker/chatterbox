@@ -7,6 +7,8 @@
 # Ignore bundler config.
 /.bundle
 
+# Ignore chart deps
+/helm/charts/
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
