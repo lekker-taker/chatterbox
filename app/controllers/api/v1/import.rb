@@ -8,6 +8,8 @@ module API
 
       post "reviews" do
         ImportService.call(params.dig("reviews", "tempfile"))
+      rescue JSON::ParserError => e
+        error!({error: {message: e}}, 422)
       end
     end
   end
