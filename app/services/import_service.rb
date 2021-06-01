@@ -8,6 +8,7 @@
 #
 class ImportService < ApplicationService
   INDEX_NAME = :reviews
+  BATCH_SIZE = 1000
   attr_reader :data, :client
 
   def initialize(data) # rubocop:disable Lint/MissingSuper
@@ -18,21 +19,32 @@ class ImportService < ApplicationService
   def call
     reset_index!
 
-    data.each do |r|
-      id = r.delete("id")
-      r["themes"].map! { |theme| theme.merge(category_id: Theme.find(theme["theme_id"]).category_id) }
-
-      client.index(index: INDEX_NAME, id: id, body: r)
-    end
+    import(format(data))
   end
 
   private
+
+  def import(dataset)
+    dataset.each_cons(BATCH_SIZE) do
+      client.bulk(body: Elasticsearch::API::Utils.__bulkify(_1))
+    end
+  end
+
+  def format(reviews)
+    reviews.map! do |r|
+      id = r.delete("id")
+      r["themes"].map! { |theme| theme.merge(category_id: Theme.find(theme["theme_id"]).category_id) }
+
+      { index: {_index: INDEX_NAME, _id: id, data: r }}
+    end
+  end
 
   def reset_index! # rubocop:disable Metrics/MethodLength
     delete_index!
 
     client.indices.create index: INDEX_NAME, body: {
       mappings: {
+        _source: { enabled: false },
         properties: {
           themes: {
             type: :nested,

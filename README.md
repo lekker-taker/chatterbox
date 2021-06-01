@@ -24,7 +24,6 @@ Service objects in app/services
 
 As it's not a real app for simplicity there's no background processing and RDBMS storage. Theme & category 
 
-
 * Deployment instructions
 
 The app contains HELM3 chart to deploy itself and dependencies to k8s cluster.
@@ -54,11 +53,9 @@ Reviews data persisted in `Elastic`. It could be populated  either from same sam
 
 `rails db:reset`
 
-or it could be uploaded via the API:
+or upload via the API:
 
-`curl -XPOST 127.0.0.1:3000/api/import`
-
-Be aware current import stores each review via separate HTTP call, instead of using bulk import. It's quite slow. Also it's unfortunately synchronous.
+`curl -F 'reviews=@./db/data/reviews.json' http://185-3-92-120.nip.io/api/review`
 
 * How to run the test suite
 
