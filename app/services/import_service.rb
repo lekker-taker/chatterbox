@@ -30,6 +30,7 @@ class ImportService < ApplicationService
 
   def reset_index!
     client.indices.delete index: INDEX_NAME
+
     client.indices.create index: INDEX_NAME, body: {
       mappings: {
         properties: {
@@ -46,5 +47,10 @@ class ImportService < ApplicationService
         }
       }
     }
+  end
+
+  def delete_index!
+    client.indices.delete index: INDEX_NAME
+  rescue Elasticsearch::Transport::Transport::Errors::NotFound
   end
 end
