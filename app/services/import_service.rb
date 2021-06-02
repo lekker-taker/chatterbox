@@ -8,7 +8,7 @@
 #
 class ImportService < ApplicationService
   INDEX_NAME = :reviews
-  BATCH_SIZE = 1000
+  BATCH_SIZE = 5000
   attr_reader :data, :client
 
   def initialize(data) # rubocop:disable Lint/MissingSuper
@@ -25,8 +25,8 @@ class ImportService < ApplicationService
   private
 
   def import(dataset)
-    dataset.each_cons(BATCH_SIZE) do
-      client.bulk(body: Elasticsearch::API::Utils.__bulkify(_1))
+    dataset.each_slice(BATCH_SIZE) do |chunk|
+      client.bulk(body: Elasticsearch::API::Utils.__bulkify(chunk))
     end
   end
 
