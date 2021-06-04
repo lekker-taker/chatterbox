@@ -4,14 +4,19 @@
  Backend repository for chatterbox app.
  A unified customer experience analytics platform enabling companies to  examine feedback at scale. 
 
-**WARNING** This app is not production ready yet.
+**WARNING**
+This app is not production ready yet.
 Please refer to [Limitations](#Limitations) and [TODO](#todo) sections for unresolved issues.
 
 ### API
 Chatterbox app provides 4 API endpoints:
+
 GET **/api/swagger_doc.json** -- OpenAPI v3 API schema.
+
 GET **/api/v1/dashboard.json** -- Provides aggregated sentiment data with theme\category breakdown.
+
 GET **/api/v1/themes.json** -- Full list of valid theme and category names.
+
 POST **/api/v1/reviews** -- Accepts `reviews.json` file. (Re)populates DB.
 
 *CORS allows access from https://editor.swagger.io (strongly recommended!)*
@@ -22,14 +27,18 @@ Main parts of app are:
 * Grape API definitions in **app/controllers/api**
 * In-memory themes model in **app/models**
 * Service objects in **app/services**
-*As it's not a real app for simplicity there's no background processing and RDBMS storage.*
+
+*As it's not a real app yet so for simplicity there's no background processing and RDBMS storage.*
   
 ### Database creation \ initialization
 Sample data contained in repo at /db/data.
 Themes & categories are loaded on app boot to AR like `Theme` class. And persisted in class variables.
-Reviews data persisted in `Elastic`. It could be populated either from same sample dataset via rake task:
+Reviews data persisted in `Elastic`. It could be populated either via rake task:
+
 `rails db:reset`
+
 or uploaded via the API:
+
 `curl -F 'reviews=@./db/data/reviews.json' http://185-3-92-120.nip.io/api/review`
 
 ### Deployment instructions
