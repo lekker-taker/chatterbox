@@ -50,7 +50,7 @@ Before deploy make sure you have `kubectl` and `helm` V3 installed. And your k8s
 
 ```bash
 # Verify KUBECONFIG is OK. And cluster is reachable.
-kubectl cluster info
+kubectl cluster-info
  
 # Installs nginx-ingress, elastic and app into default context
 cd ./helm
