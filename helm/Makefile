@@ -11,4 +11,4 @@ uninstall:
 
 getaddr:
 	@echo "Voilà. App would be soon available at:"
-	@kubectl get service chatterbox-ingress-nginx-controller -ojson | jq -r '"http://"+.status.loadBalancer.ingress[].ip | gsub("\\.";"-")+".nip.io/api/swagger_doc"'
+	@kubectl get service chatterbox-ingress-nginx-controller -ojson | jq -r '"https://"+.status.loadBalancer.ingress[].ip | gsub("\\.";"-")+".nip.io/api/swagger_doc"'
