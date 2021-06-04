@@ -4,6 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.0.1"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
+gem "dotenv-rails", require: "dotenv/rails-now"
 gem "rails", "~> 6.1.3"
 gem "tzinfo-data"
 
@@ -16,14 +17,13 @@ gem "puma", "~> 5.0"
 gem "rack-cors"
 
 gem "grape"
-gem "grape-entity"
 gem "grape-swagger"
 
 group :development, :test do
-  gem "dotenv-rails", require: "dotenv/rails-now"
   gem "pry-byebug"
   gem "rspec-rails"
   gem "standard"
+  gem "httplog", require: false # Require if logging of http calls needed
 end
 
 group :development do
