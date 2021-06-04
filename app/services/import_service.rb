@@ -7,14 +7,14 @@
 # ImportService.call(data)
 #
 class ImportService < ApplicationService
-  INDEX_NAME = ENV.fetch('REVIEWS_INDEX_NAME')
+  INDEX_NAME = ENV.fetch("REVIEWS_INDEX_NAME")
   BATCH_SIZE = 5000
   attr_reader :data, :client, :block
 
   def initialize(data, block: false) # rubocop:disable Lint/MissingSuper
     @data = JSON.parse(data.read)
     @client = Elasticsearch::Client.new
-    @block
+    @block = !!block
   end
 
   def call
@@ -27,7 +27,7 @@ class ImportService < ApplicationService
 
   def import(dataset)
     dataset.each_slice(BATCH_SIZE) do |chunk|
-      client.bulk(body: Elasticsearch::API::Utils.__bulkify(chunk), refresh: !!block)
+      client.bulk(body: Elasticsearch::API::Utils.__bulkify(chunk), refresh: block)
     end
   end
 
@@ -36,7 +36,7 @@ class ImportService < ApplicationService
       id = r.delete("id")
       r["themes"].map! { |theme| theme.merge(category_id: Theme.find(theme["theme_id"]).category_id) }
 
-      { index: {_index: INDEX_NAME, _id: id, data: r }}
+      {index: {_index: INDEX_NAME, _id: id, data: r}}
     end
   end
 
@@ -45,18 +45,18 @@ class ImportService < ApplicationService
 
     client.indices.create index: INDEX_NAME, body: {
       mappings: {
-        _source: { enabled: false },
+        _source: {enabled: false},
         properties: {
           themes: {
             type: :nested,
             properties: {
-              theme_id: { type: :keyword },
-              category_id: { type: :keyword },
-              sentiment: { type: :byte }
+              theme_id: {type: :keyword},
+              category_id: {type: :keyword},
+              sentiment: {type: :byte}
             }
           },
-          created_at: { type: :date },
-          comment: { type: :text }
+          created_at: {type: :date},
+          comment: {type: :text}
         }
       }
     }
