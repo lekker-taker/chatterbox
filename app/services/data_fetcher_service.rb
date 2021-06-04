@@ -20,11 +20,11 @@ class DataFetcherService < ApplicationService
   end
 
   def call
-    query = comment ? { bool: { must: { match: { comment: comment } } } } : { match_all: {} }
+    query = comment ? { match_phrase: { comment: comment } } : { match_all: {} }
 
-    client.search index: :reviews, size: 0, body: { query: query,
-                                                    aggs: { themes: { nested: { path: :themes },
-                                                                      **nested_aggregation } } }
+    client.search index: INDEX_NAME, size: 0, body: { query: query,
+                                                      aggs: { reviews: { nested: { path: :themes },
+                                                                         **nested_aggregation } } }
   end
 
   private
@@ -42,7 +42,7 @@ class DataFetcherService < ApplicationService
     {
       aggs: {
         by_theme: {
-          terms: { field: "themes.theme_id" },
+          terms: { field: "themes.theme_id", size: 100 }, # Instead of using size, composite aggregations should be considered
           aggs: { average_score: { avg: { field: "themes.sentiment" } } }
         },
         by_caterogy: {
