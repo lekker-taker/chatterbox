@@ -6,7 +6,7 @@ module API
         optional :theme_id, allow_blank: false, type: Integer
         optional :category_id, allow_blank: false, type: Integer
         optional :phrase, as: :comment, allow_blank: false, type: String, desc: "Filter by phrase in a product review"
-        mutually_exclusive :theme, :category
+        mutually_exclusive :theme_id, :category_id
       end
 
       get :dashboard do
