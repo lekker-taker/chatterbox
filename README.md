@@ -1,16 +1,16 @@
 # README
 
-WARNING This app is not production ready. WARNING
-Please refer to TODO section for unresolved issues. 
+WARNING This app is not production ready.
+Please refer to Limitations and TODO sections for unresolved issues.
 
 # API
 
 Chatterbox app provides 4 API endpoints:
 
 GET /api/swagger_doc.json  -- OpenAPI v3 API schema.
-GET /api/dashboard.json -- Provides aggregated sentiment data with theme\category breakdown.
-GET /api/themes.json -- Provides full list of valid theme and category names.
-POST /api/reviews  -- Accepts new `reviews.json` file. Populates DB.
+GET /api/v1/dashboard.json -- Provides aggregated sentiment data with theme\category breakdown.
+GET /api/v1/themes.json -- Provides full list of valid theme and category names.
+POST /api/v1/reviews  -- Accepts `reviews.json` file. (Re)populates DB.
 
 CORS allows access from https://editor.swagger.io (strongly recommended!)
 
@@ -44,6 +44,44 @@ make install --wait
 make getaddr # Prints swagger doc URL
 ```
 
+# Development instructions
+
+As CI\CD is not implemented, deploying changes requires rebuild of the docker image:
+
+```
+docker buildx build -t ghcr.io/lekker-taker/chatterbox:latest --platform linux/amd64 --push  .
+```
+
+# Tests
+
+Test are implemented to have biggest bang for bug. Following testing honeycomb principle, integration test was prioritized.
+There are few rough edges in app that would benefit from future unit tests. Test coverage is not being measured.
+
+Running tests:
+
+```
+# Following env vars already set as defaults. Affect data storage
+echo ELASTICSEARCH_URL=http://elastic:9200 >>.env.test.local
+echo REVIEWS_INDEX_NAME = :reviews_test >>.env.test.local
+
+
+# Populate test:db
+env RAILS_ENV=test rails db:reset
+
+# Run specs
+bundle exec rspec
+```
+
+# Limitations
+
+Please note the default deployment configuration creates 3 node Elastic cluster with tiny nodes.
+Application's k8s deployment is not constrained in resources provided.
+During the import it might consume ~10x of imported `reviews.json`
+Nginx Ingress has file limit set to 20MB so App should not consume over ~200MB.
+Ingress will timeout after 60sec.
+
+Considering this limitations import of over 100k reviews expected to fail.
+
 * Database creation \ initialization
 
 Sample data contained in repo at /db/data.
@@ -53,38 +91,15 @@ Reviews data persisted in `Elastic`. It could be populated  either from same sam
 
 `rails db:reset`
 
-or upload via the API:
+or uploaded via the API:
 
 `curl -F 'reviews=@./db/data/reviews.json' http://185-3-92-120.nip.io/api/review`
 
-* How to run the test suite
-
-`bundle exec rspec`
-
-# Develop
-
-While CI\CD is not implemented, if making changes please rebuild the docker image manually:
-
-```
-docker buildx build -t ghcr.io/lekker-taker/chatterbox:latest --platform linux/amd64 --push  .
-```
-
 # TODO
-
-This sections highlights few aspects to be resolved to make it production grade.
+This sections highlights some missing parts to be resolved to make it production grade.
 
 * Authentication
-All endpoints lack authentication ana authorization. 
-
-* Helm chart
-Charts deploys 3 ES nodes and 2 puma workers w/o taking cluster hardware into consideration. It's quite inefficient. Utilization might be quite.
-
-* Tests
-
-Test are implemented to have biggest bang for bug aka Testing Honeycomb.
-There are few rough edges in app that would benefit from future unit tests.
-Also test coverage is not measured.
+All endpoints lack authentication ana authorization.
 
 * CI\CD
-
 No CI\CD for now.
