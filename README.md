@@ -54,7 +54,7 @@ kubectl cluster-info
  
 # Installs nginx-ingress, elastic and app into default context
 cd ./helm
-make install --wait
+make install
 
 # Wait few minutes for elastic to start 3 nodes
 make getaddr # Prints swagger doc URL
