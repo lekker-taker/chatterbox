@@ -7,7 +7,7 @@
 # ImportService.call(data)
 #
 class ImportService < ApplicationService
-  INDEX_NAME = :reviews
+  INDEX_NAME = ENV.fetch('REVIEWS_INDEX_NAME')
   BATCH_SIZE = 5000
   attr_reader :data, :client
 

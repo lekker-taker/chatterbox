@@ -9,6 +9,7 @@
 #  DataFetcherService.call(comment: "update", category_id: 1234)
 #
 class DataFetcherService < ApplicationService
+  INDEX_NAME = ENV.fetch("REVIEWS_INDEX_NAME")
   attr_reader :comment, :theme_id, :category_id, :client
 
   def initialize(comment: nil, theme_id: nil, category_id: nil) # rubocop:disable Lint/MissingSuper
