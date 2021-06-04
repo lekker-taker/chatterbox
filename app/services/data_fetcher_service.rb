@@ -20,34 +20,34 @@ class DataFetcherService < ApplicationService
   end
 
   def call
-    query = comment ? { match_phrase: { comment: comment } } : { match_all: {} }
+    query = comment ? {match_phrase: {comment: comment}} : {match_all: {}}
 
-    client.search index: INDEX_NAME, size: 0, body: { query: query,
-                                                      aggs: { reviews: { nested: { path: :themes },
-                                                                         **nested_aggregation } } }
+    client.search index: INDEX_NAME, size: 0, body: {query: query,
+                                                     aggs: {reviews: {nested: {path: :themes},
+                                                                      **nested_aggregation}}}
   end
 
   private
 
   def nested_aggregation
-    filter = { filter: { term: { "themes.theme_id" => theme_id } } } if theme_id
-    filter = { filter: { term: { "themes.category_id" => category_id } } } if category_id
+    filter = {filter: {term: {"themes.theme_id" => theme_id}}} if theme_id
+    filter = {filter: {term: {"themes.category_id" => category_id}}} if category_id
 
     return inner_aggregation if filter.nil?
 
-    { aggs: { filtered: { **filter, **inner_aggregation } } }
+    {aggs: {filtered: {**filter, **inner_aggregation}}}
   end
 
   def inner_aggregation # rubocop:disable Metrics/MethodLength
     {
       aggs: {
         by_theme: {
-          terms: { field: "themes.theme_id", size: 100 }, # Instead of using size, composite aggregations should be considered
-          aggs: { average_score: { avg: { field: "themes.sentiment" } } }
+          terms: {field: "themes.theme_id", size: 100}, # Instead of using size, composite aggregations should be considered
+          aggs: {average_score: {avg: {field: "themes.sentiment"}}}
         },
         by_caterogy: {
-          terms: { field: "themes.category_id" },
-          aggs: { average_score: { avg: { field: "themes.sentiment" } } }
+          terms: {field: "themes.category_id"},
+          aggs: {average_score: {avg: {field: "themes.sentiment"}}}
         }
       }
     }

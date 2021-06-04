@@ -39,6 +39,6 @@ RSpec.configure do |config|
   config.around(:each, :mock_reviews) do |example|
     ImportService.call(reviews, block: true)
     example.run
-    Rake::Task['db:reset'].invoke
+    Rake::Task["db:reset"].invoke
   end
 end

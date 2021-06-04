@@ -20,6 +20,6 @@ class DataPresenterService < ApplicationService
   private
 
   def scores(type)
-    data.dig(type.to_s, "buckets").map{|theme| [theme["key"], theme.dig("average_score", "value")]}.to_h
+    data.dig(type.to_s, "buckets").map { |theme| [theme["key"], theme.dig("average_score", "value")] }.to_h
   end
 end

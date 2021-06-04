@@ -32,7 +32,6 @@ RSpec.describe API::V1::Import, type: :request do
         expect(response).to have_http_status(:no_content)
       end
 
-
       it "is calls ImportService" do
         expect(ImportService).to receive(:call).with(an_instance_of(Tempfile))
 

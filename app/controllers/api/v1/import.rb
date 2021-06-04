@@ -5,7 +5,7 @@ module API
       params { requires :reviews, type: File }
 
       rescue_from JSON::ParserError do |e|
-        error!({error: {message: 'Invalid JSON'}}, 422)
+        error!({error: {message: "Invalid JSON"}}, 422)
       end
 
       post "reviews" do

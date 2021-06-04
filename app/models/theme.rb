@@ -47,9 +47,9 @@ class Theme
 
     def category_name_by_category_id(category_id)
       @category_name_by_category_id ||= JSON
-                                        .parse(CATEGORIES_DATA.read)
-                                        .pluck("id", "name")
-                                        .to_h
+        .parse(CATEGORIES_DATA.read)
+        .pluck("id", "name")
+        .to_h
       @category_name_by_category_id[category_id]
     end
   end
